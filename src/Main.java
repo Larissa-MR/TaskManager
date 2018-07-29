@@ -36,7 +36,8 @@ public class Main {
 
 		rightEmployee = SystemManager.loginIsValid(empList, inpUser, inpPass);
 
-		// HAUPTMENÜ
+		// HAUPTMENÃœ
+		//Test
 
 		ArrayList<Task> empTasks = new ArrayList<Task>();
 		Task t1 = new Task(1);
