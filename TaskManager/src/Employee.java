@@ -70,8 +70,8 @@ public class Employee {
 	
 	
 	
-	List<Employee> list= new ArrayList<Employee>();
-	Employee emp1 = new Employee("EMP_1000", "Manuel","Mueller",40);
+	/*ArrayList<Employee> list= new ArrayList<Employee>();
+	Employee emp1 = new Employee("EMP_1000", "Manuel","Mueller", 40);
 	Employee emp2 = new Employee("EMP_1001","Jochen","Lauter",40);
 	Employee emp3 = new Employee("EMP_1002","Nina","Lambrecht",40);
 	Employee emp4 = new Employee("EMP_1003","Giselle","Stecher",40);
@@ -97,10 +97,14 @@ public class Employee {
 	Employee emp24 = new Employee("EMP_1000", "Manuel","Mueller",40);
 	Employee emp25 = new Employee("EMP_1000", "Manuel","Mueller",40);
 	
-	list.add(o);
-	list.add(o1);
+	list.
+	list.add(emp2);
 	for (Employee x:list)
 	System.out.print(x);
+	
+	*/
+	//if employee is logged in, we have to connect the login data to the correct employeeid 
+	//create Task
 	
 	
 	
