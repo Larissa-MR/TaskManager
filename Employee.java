@@ -1,14 +1,62 @@
+import java.io.*;
 import java.util.*;
 
+/**
+ * 
+ * @author Aysu Heristchi
+ * @version 1.0
+ */
 
-public class Employee {
+
+public abstract class Employee implements Serializable{
 	private long id;
 	private String firstName, lastName;
-	private LogInData logInDate;
-	private ArrayList<Task> tasks;
+	private LoginData loginData;
+	private int workload;
 	
-	public Employee(long id) {
+	public Employee(long id, String firstName, String lastName, int workload, LoginData loginData) {
 		this.id=id;
+		this.firstName=firstName;
+		this.lastName=lastName;
+		this.workload=workload;
+		this.loginData=loginData;
+	}
+	
+	
+	
+	
+	/**
+	 * adds newTask to File that is named after employee id (serialization)
+	 * @param newTask
+	 * @throws IOException
+	 */
+	public void addTask(Task newTask) throws IOException {
+		String employeeId = Long.toString(this.id);
+		File employeeFile = new File(employeeId + ".txt");
+		 // if file already exists will do nothing 
+		employeeFile.createNewFile();
+		try (FileOutputStream fos = new FileOutputStream(employeeFile, false); 
+				ObjectOutputStream oos = new ObjectOutputStream(fos)){
+			oos.writeObject(newTask);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	
+	public int getWorkload() {
+		return workload;
+	}
+
+	public void setWorkload(int workload) {
+		this.workload = workload;
+	}
+
+
+	public void setLoginData(LoginData loginData) {
+		this.loginData = loginData;
 	}
 
 	public long getId() {
@@ -34,22 +82,15 @@ public class Employee {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-	public LogInData getLogInDate() {
-		return logInDate;
+	
+	public LoginData getLoginData() {
+		return loginData;
 	}
 
-	public void setLogInDate(LogInData logInDate) {
-		this.logInDate = logInDate;
+	public void setLogInDate(LoginData loginData) {
+		this.loginData = loginData;
 	}
 
-	public ArrayList<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(ArrayList<Task> tasks) {
-		this.tasks = tasks;
-	}
 }
 
 	
