@@ -1,38 +1,63 @@
+import java.io.*;
 import java.util.*;
 
+/**
+ * 
+ * @author Aysu Heristchi
+ * @version 1.0
+ */
 
-public class Employee {
+
+public abstract class Employee implements Serializable{
 	private long id;
 	private String firstName, lastName;
 	private LoginData loginData;
-	private ArrayList<Task> tasks;
 	private int workload;
 	
-	public Employee(long id, String firstName, String lastName, int workload, LoginData loginData) {
+	public Employee(long id, String lastName, String firstName, int workload) {
 		this.id=id;
-		this.firstName=firstName;
 		this.lastName=lastName;
+		this.firstName=firstName;
 		this.workload=workload;
-		this.loginData=loginData;
+	}
+	
+	
+	
+	
+	/**
+	 * adds newTask to File that is named after employee id (serialization)
+	 * @param newTask
+	 * @throws IOException
+	 */
+	public void addTask(Task newTask) throws IOException {
+		String employeeId = Long.toString(this.id);
+		File employeeFile = new File(employeeId + ".txt");
+		 // if file already exists will do nothing 
+		employeeFile.createNewFile();
+		try (FileOutputStream fos = new FileOutputStream(employeeFile, false); 
+				ObjectOutputStream oos = new ObjectOutputStream(fos)){
+			oos.writeObject(newTask);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
-	//gibt der Task neue id und fügt diese Task zur Tasklist des Employees hinzu
-	public void addTask(Task newTask) {
-		newTask.setId(getUniqueTaskId(newTask));
-		tasks.add(newTask);
+	
+	
+	public int getWorkload() {
+		return workload;
 	}
-	
-	
-	 //setzt index der Task=id der Task
-	public int getUniqueTaskId(Task task) {
-			return tasks.indexOf(task);
-		}
-	
 
-	
-	
-	
+	public void setWorkload(int workload) {
+		this.workload = workload;
+	}
+
+
+	public void setLoginData(LoginData loginData) {
+		this.loginData = loginData;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -56,12 +81,6 @@ public class Employee {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-	
-	
-	
-	
-	
 	
 	public LoginData getLoginData() {
 		return loginData;
@@ -71,13 +90,6 @@ public class Employee {
 		this.loginData = loginData;
 	}
 
-	public ArrayList<Task> getTasks() {
-		return tasks;
-	}
-
-	public void setTasks(ArrayList<Task> tasks) {
-		this.tasks = tasks;
-	}
 }
 
 	

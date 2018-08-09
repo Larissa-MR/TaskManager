@@ -1,61 +1,40 @@
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws FileNotFoundException {
+	public static void main(String[] args) throws ParseException, IOException {
 		// TODO Auto-generated method stub
-
-//	Employee neu = DataBase.addnewEmployee(1111, "einVorname", "einNachname", 40, new LoginData("einUsername", "einPasswort"));
-//	System.out.println(neu.getFirstName());
-
-		ArrayList<Employee> empList = new ArrayList<Employee>();
-		empList.add(new Employee(1000, "Manuel", "Mueller", 40, new LoginData("us1", "pw1")));
-		empList.add(new Employee(1001, "Jochen", "Lauter", 40, new LoginData("us2", "pw2")));
-		empList.add(new Employee(1002, "Nina", "Lambrecht", 40, new LoginData("us3", "pw3")));
-		empList.add(new Employee(1003, "Giselle", "Stecher", 40, new LoginData("us4", "pw4")));
-		/*
-		 * Employee emp5 = new Employee(1005,"Paul","Stehr",30, new LoginData("us5",
-		 * "pw5")); Employee emp6 = new Employee(1006,"Janine","Steinberger",20, new
-		 * LoginData("us6", "pw6")); Employee emp7 = new
-		 * Employee(1007,"Tom","Lauber",40, new LoginData("us7", "pw7"));
-		 */
-
-		// NUTZER LOGIN ABFRAGE
-
+		
+		Administrator a = new Administrator(0, "Milch", "Mueller", 40);
+		a.newEmployee(1, "Jauch", "Gunther", 30);
+		//LOGIN
+		
 		Employee rightEmployee = null;
 		Scanner keyboard = new Scanner(System.in);
 		String inpUser = "", inpPass = "";
-
-		while (SystemManager.loginIsValid(empList, inpUser, inpPass) == null) {
+		
+		while (!SystemManager.loginIsValid(inpUser, inpPass)) {
 			System.out.println("Username: ");
 			inpUser = keyboard.nextLine();
 			System.out.println("Passwort: ");
-			inpPass = keyboard.nextLine(); // gets input from user
+			inpPass = keyboard.nextLine();     // gets input from user
 		}
+		
 
-		rightEmployee = SystemManager.loginIsValid(empList, inpUser, inpPass);
 
-		// HAUPTMENÃœ
-		//Test
+		// HAUPTMENÜ
 
-		ArrayList<Task> empTasks = new ArrayList<Task>();
-		Task t1 = new Task(1);
-		t1.setTitle("Meine erste Aufgabe");
-		ArrayList<String> description= new ArrayList<String>();
-		description.add("rumsitzen");
-		t1.setDescription(description);
-		empTasks.add(t1);
 
 		System.out.println(
 				"                WELCOME " + rightEmployee.getFirstName() + " " + rightEmployee.getLastName() + "!");
 
-		System.out.println("\n_______________________MY TASKS_______________________");
-		for (int i = 0; i < empTasks.size(); i++) {
-			System.out.println("\nID:          " + empTasks.get(i).getId() + "\nTitle:       "
-					+ empTasks.get(i).getTitle() + "\n" + "Description: " + empTasks.get(i).getDescription());
-		}
-
+	/*	SystemManager.viewEmpTasks(rightEmployee.getTasks());
+		
 		System.out.println("\n______________Please choose an option_______________");
 
 		String userOption = "";
@@ -70,9 +49,55 @@ public class Main {
 
 			switch (userOption) {
 			case "1":
-				System.out.println("You chose 1");
 				// method
-				System.out.println("_________________");
+				// cancel option fehlt (zurück zum Hauptmenü)
+				System.out.println("\n\n\n______Add task______");
+				String titleInp="";
+				while(titleInp.equals("")) {
+					System.out.println("Title: ");
+					titleInp=keyboard.nextLine();
+				}
+				
+				String descriptionInp="";
+				while(descriptionInp.equals("")) {
+					System.out.println("Description: ");
+					descriptionInp=keyboard.nextLine();
+				}
+				
+				String dueDateInp="";
+				Date d=null;
+				while(dueDateInp.equals("")|| !SystemManager.dateIsValid(dueDateInp)) {
+					System.out.println("Due date (dd.mm.yyyy): ");
+					dueDateInp=keyboard.nextLine();
+				}
+				LocalDate dueDate= SystemManager.convertStringToLocalDate(dueDateInp);
+
+				String timeInp="";
+				int hours=0;
+				do {
+				System.out.println("Time exposure (in h): ");
+				timeInp=keyboard.nextLine();
+				}
+				while(timeInp.equals("")||SystemManager.StringToInt(timeInp)==-1);
+				hours=SystemManager.StringToInt(timeInp);
+						
+				String priorityInp="";
+				int priority=0;
+				do {
+					System.out.println("Priority (1-low to 3-high): ");
+					priorityInp=keyboard.nextLine();
+				}
+				while(SystemManager.priorityIsValid(priorityInp)==0);
+				priority=SystemManager.priorityIsValid(priorityInp);
+				
+				Task myTask = new Task(titleInp, dueDate, priority, hours);
+				ArrayList<String>descriptionInpList=new ArrayList<String>();
+				descriptionInpList.add(descriptionInp);
+				myTask.setDescription(descriptionInpList);
+				rightEmployee.addTask(myTask);
+				
+				SystemManager.taskSummaryOutput(myTask);
+				
 				break;
 			case "2":
 
@@ -87,5 +112,8 @@ public class Main {
 		}
 
 		while (userOption.equals("")); // Input-Validation (1,2,3,0)
+		
+		
+		*/
 	}
 }
