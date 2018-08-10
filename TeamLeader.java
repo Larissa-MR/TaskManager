@@ -3,6 +3,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class TeamLeader extends Employee{
 	
@@ -44,39 +45,75 @@ public class TeamLeader extends Employee{
     		
     	}
     }
+//creating a new Team/directory
 
-public Team newTeam(long id, String lastName, String firstName) throws IOException {
-	Team team = new Team(id, lastName, firstName);
-	String tID = Long.toString(id);
-	File TeamFile = new File("C:\\Users\\Administrator\\Desktop\\Team\\" + tID + ".txt");
-	TeamFile.createNewFile();
-	try (FileOutputStream fos = new FileOutputStream(TeamFile, false);
+	
+public void newTeam(long id, String lastName, String firstName) throws IOException {
+	
+	Scanner line = new Scanner(System.in);
+	//unique TeamID - question do we need it?
+	String TeamID = UUID.randomUUID().toString();
+	String TeamName ="";
+	System.out.println("Bitte geben Sie einen Teamnamen ein");
+	TeamName = line.nextLine();
+	File theDir = new File(TeamName);
+
+	// if the directory does not exist, create it
+	if (!theDir.exists()) {
+	    System.out.println("creating directory: " + theDir.getName());
+	    boolean result = false;
+
+	    try{
+	        theDir.mkdir();
+	        result = true;
+	    } 
+	    catch(SecurityException se){
+	        //handle it
+	    }        
+	    if(result) {    
+	        System.out.println("Team " + theDir + "wurde erstellt");  
+	    }
+	}
+	try (FileOutputStream fos = new FileOutputStream(TeamName, false);
 			ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 		oos.writeObject(team);
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
-	return team;
+	return;
 }
 public static void deleteTeam(long id)
 {	
 	try{
-		System.out.println("Bitte geben Sie die ID des zu löschenden Teams ein");
+		System.out.println("Bitte geben den Namen des zu löschenden Teams ein");
 		Scanner keyboard = new Scanner(System.in);
-		String tIdInput = "";
-		File file = new File("c:\\" + tIdInput + ".txt");
-		if(file.delete()){
-			System.out.println(file.getName() + " is deleted!");
-		}else{
-			System.out.println("Delete operation is failed.");
-		}
+		String directoryDelete = "";
+		File directory = new File(directoryDelete);
+		//make sure directory exists
+    	if(!directory.exists()){
+ 
+           System.out.println("Directory does not exist.");
+           break;
+ 
+        }else{
+ 
+           try{
+        	   
+               delete(directory);
+        	
+           }catch(IOException e){
+               e.printStackTrace();
+               System.exit(0);
+           }
+        }
+ 
+    	System.out.println("Done");
+    } Finally
+
 	   
 	}catch(Exception e){
 		
 		e.printStackTrace();
 		
 	}
-
-	}
-
 }
