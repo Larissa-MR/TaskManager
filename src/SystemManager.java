@@ -8,44 +8,97 @@ import java.util.*;
 
 public class SystemManager {
 
-	
 	/**
-	 * geht durch jeden File in Ordner "Employees" und überprüft, ob die Konstellation aus inpUser und 
-	 * inpPass zu finden ist
-	 * @param inpUser   Nutzername
-	 * @param inpPass   Passwort
-	 * @return
-	 * @throws FileNotFoundException
+	 * 
+	 * 
+	 * @param inpUser user input for 'username'
+	 * @param inpPass user input for 'password'
+	 * @return the file's name in which both username and password were found
+	 * @throws IOException
+	 * @throws ClassNotFoundException
 	 */
 	@SuppressWarnings("resource")
-	public static boolean loginIsValid(String inpUser, String inpPass) throws FileNotFoundException {
-		File directory = new File("C:\\Users\\Administrator\\Desktop\\Employees");      //erstellt Ordner Employees, falls noch nicht vorhanden
-		File[] files = directory.listFiles();        //macht array aus allen dateien in dem Order^
+	public static String loginIsValid(String inpUser, String inpPass) throws ClassNotFoundException, IOException {
+		File directory = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees_LoginData");
+		File[] files = directory.listFiles();
 		int i = 0;
-		if (inpUser.equals("") || inpPass.equals(""))     
-			return false;
-		for (File f : files) {                         //für jede Datei in Employees
-			Scanner usScanner = new Scanner(files[i]);  // neuer Scanner
-			while (usScanner.hasNextLine()) {           //solange wie Zeile vorhanden
-				String nextToken1 = usScanner.next();    //lese nächste Zeile
-				if (nextToken1.equals(inpUser)) {         //wenn Nutzername in Zeile
-					Scanner pwScanner = new Scanner(files[i]);  //neuer Scanner (notwendig, weil man die Datei erneut von Beginn lesen muss, um auf das Passwort zu überprüfen
-					while (usScanner.hasNextLine()) {
-						String nextToken2 = pwScanner.next();
-						if (nextToken2.equals(inpPass))     //wenn auch das Passwort übereinstimmt
-							return true;
+		if (inpUser.equals("") || inpPass.equals(""))
+			return null;
+		for (File f : files) {
+			Scanner fScanner = new Scanner(files[i]);
+			i++;
+			while (fScanner.hasNextLine()) {
+				String nextToken = fScanner.next();
+				if (nextToken.equals(inpUser)) {
+					nextToken = fScanner.next();
+					if (nextToken.equals(inpPass)) {
+						return f.getName();
 					}
 				}
 			}
 		}
-		return false;
+		return null;
+	}
+
+	public static void viewEmployees() {
+		File directory = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees");
+		File[] allEmployees = directory.listFiles();
+		for (File f : allEmployees) {
+			try {
+				Employee emp = (Employee) SystemManager.readFile(f);
+				SystemManager.printEmployeeData(emp);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 
 	}
-	
-	public static Object readFile(String fileName) throws IOException, ClassNotFoundException {
+
+	/**
+	 * return Employee for the given fileName
+	 * 
+	 * @param fileName
+	 * @return Employee that is serialized in that File
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public static Employee getEmployeeByFileName(String fileName) throws ClassNotFoundException, IOException {
+		File directory = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees");
+		File[] files = directory.listFiles();
+		int i = 0;
+		for (File f : files) {
+			if (f.getName().equals(fileName)) {
+				try {
+					FileInputStream fis = new FileInputStream(f);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					Object obj = ois.readObject();
+					return (Employee) obj;
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return null;
+				}
+
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * readsFile and returns Object that is serialized in file, if object empty:
+	 * return null
+	 * 
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
+	public static Object readFile(File file) throws IOException, ClassNotFoundException {
 		try {
-			FileInputStream fis= new FileInputStream(fileName);
-			ObjectInputStream ois= new ObjectInputStream(fis);
+			FileInputStream fis = new FileInputStream(file);
+			ObjectInputStream ois = new ObjectInputStream(fis);
 			Object obj = ois.readObject();
 			return obj;
 		} catch (FileNotFoundException e) {
@@ -53,13 +106,19 @@ public class SystemManager {
 			return null;
 		}
 	}
-		
 
-	public static void viewEmpTasks(ArrayList<Task> empTasks) {
-		System.out.println("\n_______________________MY TASKS_______________________");
-		for (int i = 0; i < empTasks.size(); i++) {
-			taskSummaryOutput(empTasks.get(i));
-		}
+	public static boolean taskForIdExists(long id) {
+		if (new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees_Task\\Task" + id).exists())
+			return true;
+		else
+			return false;
+	}
+	
+	public static boolean employeeForIdExists(long id) {
+		if (new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees" + id).exists())
+			return true;
+		else
+			return false;
 	}
 
 	public static boolean dateIsValid(String dateInput) {
@@ -106,34 +165,21 @@ public class SystemManager {
 
 	}
 
-	public static void descriptionOutput(ArrayList<String> descriptionStringList) {
-		for (int i = 0; i < descriptionStringList.size(); i++) {
-			System.out.println(descriptionStringList.get(i));
-		}
-	}
-
 	public static void taskSummaryOutput(Task task) {
-		System.out.println("ID: " + task.getId());
+		System.out.println("\nId: " + task.getId());
 		System.out.println("Title: " + task.getTitle());
-		System.out.print("Description: ");
-		descriptionOutput(task.getDescription());
+		System.out.println("Description: " + task.getDescription());
 		System.out.println("Due date: " + task.getDueDate().toString());
-		System.out.println("Time exposure: " + task.getHours());
-		System.out.println("Priority: " + task.getPriority() + " hours");
+		System.out.println("Time exposure: " + task.getHours() + " hours");
+		System.out.println("Priority: " + task.getPriority());
 
 	}
 
-	/*
-	 * String choice="3"; do {
-	 * 
-	 * 
-	 * switch (choice) { case "1": System.out.println("Add a task "); choice =
-	 * input.nextLine(); break; case "2": System.out.println("Remove a task");
-	 * choice = input.nextLine(); break; case "3":
-	 * System.out.println("Update a task"); choice = input.nextLine(); break; case
-	 * "4": System.out.println("List all tasks"); choice = input.nextLine(); break;
-	 * } }
-	 * 
-	 * while (choice > 0) { System.out.println("Exit"); }
-	 */
+	public static void printEmployeeData(Employee emp) {
+		System.out.println("\nId: " + emp.getId());
+		System.out.println("Name: " + emp.getFirstName() + " " + emp.getLastName());
+		System.out.println("Capacity: " + emp.calcCapacity());
+
+	}
+
 }

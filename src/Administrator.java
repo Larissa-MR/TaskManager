@@ -12,7 +12,7 @@ public class Administrator extends Employee {
 	public Employee newEmployee(long id, String lastName, String firstName, int workload) throws IOException {
 		Employee emp = new RegularEmployee(id, lastName, firstName, workload);
 		String empId = Long.toString(id);
-		File employeeFile = new File("C:\\Users\\Administrator\\Desktop\\Employees\\" + empId + ".txt");
+		File employeeFile = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees\\Employee" + empId + ".txt");
 		employeeFile.createNewFile();
 		try (FileOutputStream fos = new FileOutputStream(employeeFile, false);
 				ObjectOutputStream oos = new ObjectOutputStream(fos)) {

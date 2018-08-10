@@ -5,5 +5,7 @@ public class RegularEmployee extends Employee{
 		super(id, lastName, firstName, workload);
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 }

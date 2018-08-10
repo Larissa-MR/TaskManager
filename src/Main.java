@@ -7,113 +7,75 @@ import java.util.*;
 
 public class Main {
 
-	public static void main(String[] args) throws ParseException, IOException {
+	public static void main(String[] args) throws ParseException, IOException, ClassNotFoundException {
 		// TODO Auto-generated method stub
-		
+
 		Administrator a = new Administrator(0, "Milch", "Mueller", 40);
 		a.newEmployee(1, "Jauch", "Gunther", 30);
-		//LOGIN
-		
-		Employee rightEmployee = null;
+
+		Employee emp1 = a.newEmployee(1, "Heine", "Heinrich", 35);
+		Employee emp2 = a.newEmployee(2, "Langstrumpf", "Pipi", 40);
+		Employee emp3 = a.newEmployee(3, "Din", "Ala", 20);
+		Employee emp4 = a.newEmployee(4, "B", "Cardi", 50);
+		Employee emp5 = a.newEmployee(5, "cool", "ok", 30);
+		Employee emp6 = a.newEmployee(6, "Man", "Iron", 20);
+		Employee emp7 = a.newEmployee(7, "Skurrt", "Skurrt", 0);
+
+		// LOGIN
 		Scanner keyboard = new Scanner(System.in);
-		String inpUser = "", inpPass = "";
-		
-		while (!SystemManager.loginIsValid(inpUser, inpPass)) {
-			System.out.println("Username: ");
-			inpUser = keyboard.nextLine();
-			System.out.println("Passwort: ");
-			inpPass = keyboard.nextLine();     // gets input from user
-		}
-		
+		boolean isLoggedIn = false;
+		while (!isLoggedIn) {
+			Employee currEmployee = LoginMenu.showLoginMenu();
+			isLoggedIn=true;
 
+			// HAUPTMENÜ
 
-		// HAUPTMENÜ
+			System.out.println(
+					"                WELCOME " + currEmployee.getFirstName() + " " + currEmployee.getLastName() + "!");
 
+			System.out.println("                 MY TASKS           \n");
+			currEmployee.viewTasks();
 
-		System.out.println(
-				"                WELCOME " + rightEmployee.getFirstName() + " " + rightEmployee.getLastName() + "!");
+			System.out.println("\n______________Please choose an option_______________");
 
-	/*	SystemManager.viewEmpTasks(rightEmployee.getTasks());
-		
-		System.out.println("\n______________Please choose an option_______________");
+			String userOption = "";
 
-		String userOption = "";
+			boolean ext = true;
+			do {
+				System.out.println("\n(1) Add a task ");
+				System.out.println("(2) Delete a task ");
+				System.out.println("(3) Delegate a task ");
+				System.out.println("(0) Log out ");
 
-		do {
-			System.out.println("(1) Add a task ");
-			System.out.println("(2) Remove a task ");
-			System.out.println("(3) Edit a task ");
-			System.out.println("(0) Log out ");
+				userOption = keyboard.nextLine();
 
-			userOption = keyboard.nextLine();
-
-			switch (userOption) {
-			case "1":
-				// method
-				// cancel option fehlt (zurück zum Hauptmenü)
-				System.out.println("\n\n\n______Add task______");
-				String titleInp="";
-				while(titleInp.equals("")) {
-					System.out.println("Title: ");
-					titleInp=keyboard.nextLine();
+				switch (userOption) {
+				case "1":
+					Task currTask = AddTaskConsole.taskQuery();
+					currEmployee.addTask(currTask);
+					SystemManager.taskSummaryOutput(currTask);
+					break;
+				case "2":
+					long taskId = DeleteConsole.deleteTaskQuery();
+					currEmployee.deleteTask(taskId);
+					System.out.println("Successfully deleted!");
+					break;
+				case "3":
+					System.out.println("_______EMPLOYEES:_________ (for your tasks see above");
+					SystemManager.viewEmployees();
+					long delegationTaskId = DelegationConsole.delegationQueryTask();
+					long delegationEmpId = DelegationConsole.delegationQueryEmp();
+					currEmployee.delegateTask(delegationEmpId, delegationTaskId);
+					System.out.println("Successfully delegated!");
+					break;
+				case "0":
+					currEmployee = null;
+					ext=false;
+					isLoggedIn=false;
+					break;
 				}
-				
-				String descriptionInp="";
-				while(descriptionInp.equals("")) {
-					System.out.println("Description: ");
-					descriptionInp=keyboard.nextLine();
-				}
-				
-				String dueDateInp="";
-				Date d=null;
-				while(dueDateInp.equals("")|| !SystemManager.dateIsValid(dueDateInp)) {
-					System.out.println("Due date (dd.mm.yyyy): ");
-					dueDateInp=keyboard.nextLine();
-				}
-				LocalDate dueDate= SystemManager.convertStringToLocalDate(dueDateInp);
-
-				String timeInp="";
-				int hours=0;
-				do {
-				System.out.println("Time exposure (in h): ");
-				timeInp=keyboard.nextLine();
-				}
-				while(timeInp.equals("")||SystemManager.StringToInt(timeInp)==-1);
-				hours=SystemManager.StringToInt(timeInp);
-						
-				String priorityInp="";
-				int priority=0;
-				do {
-					System.out.println("Priority (1-low to 3-high): ");
-					priorityInp=keyboard.nextLine();
-				}
-				while(SystemManager.priorityIsValid(priorityInp)==0);
-				priority=SystemManager.priorityIsValid(priorityInp);
-				
-				Task myTask = new Task(titleInp, dueDate, priority, hours);
-				ArrayList<String>descriptionInpList=new ArrayList<String>();
-				descriptionInpList.add(descriptionInp);
-				myTask.setDescription(descriptionInpList);
-				rightEmployee.addTask(myTask);
-				
-				SystemManager.taskSummaryOutput(myTask);
-				
-				break;
-			case "2":
-
-				break;
-			case "3":
-
-				break;
-			case "0":
-
-				break;
-			}
+			} while (userOption.equals("") || ext);
 		}
 
-		while (userOption.equals("")); // Input-Validation (1,2,3,0)
-		
-		
-		*/
 	}
 }
