@@ -82,33 +82,26 @@ public void newTeam(long id, String lastName, String firstName) throws IOExcepti
 	}
 	return;
 }
-public static void deleteTeam(long id)
+public static void deleteTeam(File directory2) throws IOException
 {	
+	System.out.println("Bitte geben den Namen des zu löschenden Teams ein");
 	try{
-		System.out.println("Bitte geben den Namen des zu löschenden Teams ein");
 		Scanner keyboard = new Scanner(System.in);
-		String directoryDelete = "";
+		String directoryDelete = keyboard.nextLine();
 		File directory = new File(directoryDelete);
 		//make sure directory exists
     	if(!directory.exists()){
  
            System.out.println("Directory does not exist.");
-           break;
+           System.exit(0);
  
         }else{
  
-           try{
-        	   
-               delete(directory);
-        	
-           }catch(IOException e){
-               e.printStackTrace();
-               System.exit(0);
-           }
+           deleteTeam(directory);
         }
  
     	System.out.println("Done");
-    } Finally
+     
 
 	   
 	}catch(Exception e){
@@ -116,4 +109,5 @@ public static void deleteTeam(long id)
 		e.printStackTrace();
 		
 	}
+}
 }
