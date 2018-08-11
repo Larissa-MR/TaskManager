@@ -6,7 +6,7 @@ public class LoginMenu {
 	public static Employee showLoginMenu() throws ClassNotFoundException, IOException {
 		Scanner keyboard = new Scanner(System.in);
 		String inpUser = "", inpPass = "";
-
+		
 		do {
 			System.out.println("Username: ");
 			inpUser = keyboard.nextLine();

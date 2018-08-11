@@ -40,12 +40,14 @@ public class Main {
 
 			String userOption = "";
 
+			
 			boolean ext = true;
 			do {
 				System.out.println("\n(1) Add a task ");
 				System.out.println("(2) Delete a task ");
 				System.out.println("(3) Delegate a task ");
 				System.out.println("(0) Log out ");
+				System.out.println("Press 'c' to close ");
 
 				userOption = keyboard.nextLine();
 
@@ -56,14 +58,14 @@ public class Main {
 					SystemManager.taskSummaryOutput(currTask);
 					break;
 				case "2":
-					long taskId = DeleteConsole.deleteTaskQuery();
+					long taskId = DeleteConsole.deleteTaskQuery(currEmployee);
 					currEmployee.deleteTask(taskId);
 					System.out.println("Successfully deleted!");
 					break;
 				case "3":
 					System.out.println("_______EMPLOYEES:_________ (for your tasks see above");
 					SystemManager.viewEmployees();
-					long delegationTaskId = DelegationConsole.delegationQueryTask();
+					long delegationTaskId = DelegationConsole.delegationQueryTask(currEmployee);
 					long delegationEmpId = DelegationConsole.delegationQueryEmp();
 					currEmployee.delegateTask(delegationEmpId, delegationTaskId);
 					System.out.println("Successfully delegated!");
@@ -73,6 +75,9 @@ public class Main {
 					ext=false;
 					isLoggedIn=false;
 					break;
+					
+				case "c":
+					Runtime.getRuntime().exit(0);
 				}
 			} while (userOption.equals("") || ext);
 		}

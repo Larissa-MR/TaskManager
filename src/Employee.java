@@ -34,6 +34,7 @@ public abstract class Employee implements Serializable {
 		try (FileOutputStream fos = new FileOutputStream(employeeFile, false);
 				ObjectOutputStream oos = new ObjectOutputStream(fos)) {
 			oos.writeObject(newTask);
+			oos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -68,10 +69,8 @@ public abstract class Employee implements Serializable {
 				+ "\\Task" + taskId + ".txt");
 		File destFile = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees_Task\\Employee" + employeeId
 				+ "\\Task" + taskId + ".txt");
-		FileChannel src = new FileInputStream(srcFile).getChannel();
-		  FileChannel dest = new FileOutputStream(destFile).getChannel();
-		  dest.transferFrom(src, 0, src.size());
-		  srcFile.delete();
+		SystemManager.copyFileUsingStream(srcFile, destFile);
+		  srcFile.delete();  
 	}
 	
 	public int calcCapacity() {
@@ -89,6 +88,13 @@ public abstract class Employee implements Serializable {
 		}
 		return -1;
 		
+	}
+	
+	public boolean taskForIdExists(long id) {
+		if (new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Employees_Task\\Employee" + this.id + "\\Task" + id + ".txt").exists())
+			return true;
+		else
+			return false;
 	}
 
 	public int getWorkload() {
