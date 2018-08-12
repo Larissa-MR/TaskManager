@@ -8,9 +8,10 @@ import java.util.UUID;
 public class TeamLeader extends Employee{
 	
 	Team team;
+	private long id;
 
-	public TeamLeader(long id, String firstName, String lastName, int workload, LoginData loginData) {
-		super(id, firstName, lastName, workload, loginData);
+	public TeamLeader(long teamId, String teamName, String lastName, int workload, LoginData loginData) {
+		super(teamId, teamName,lastName, workload);
 		
 	}
 	
@@ -25,89 +26,37 @@ public class TeamLeader extends Employee{
 		}
 		
 	}
-	
-	public static void deleteEmployee(long id)
-    {	
-    	try{
-    		System.out.println("Bitte geben Sie die ID des zu löschenden Employees ein");
-    		Scanner keyboard = new Scanner(System.in);
-    		String empIdInput = "";
-    		File file = new File("c:\\" + empIdInput + ".txt");
-    		if(file.delete()){
-    			System.out.println(file.getName() + " is deleted!");
-    		}else{
-    			System.out.println("Delete operation is failed.");
-    		}
-    	   
-    	}catch(Exception e){
-    		
-    		e.printStackTrace();
-    		
-    	}
-    }
+
 //creating a new Team/directory
 
 	
-public void newTeam(long id, String lastName, String firstName) throws IOException {
-	
-	Scanner line = new Scanner(System.in);
-	//unique TeamID - question do we need it?
-	String TeamID = UUID.randomUUID().toString();
-	String TeamName ="";
-	System.out.println("Bitte geben Sie einen Teamnamen ein");
-	TeamName = line.nextLine();
-	File theDir = new File(TeamName);
-
-	// if the directory does not exist, create it
-	if (!theDir.exists()) {
-	    System.out.println("creating directory: " + theDir.getName());
-	    boolean result = false;
-
-	    try{
-	        theDir.mkdir();
-	        result = true;
-	    } 
-	    catch(SecurityException se){
-	        //handle it
-	    }        
-	    if(result) {    
-	        System.out.println("Team " + theDir + "wurde erstellt");  
-	    }
-	}
-	try (FileOutputStream fos = new FileOutputStream(TeamName, false);
+public void addTeam(Team newTeam) throws IOException {
+	String TeamID = Long.toString(this.id);
+	File TeamDir = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Team"
+			+ TeamID + "\\Task" + newTeam.getTeamID());
+	TeamDir.mkdir();
+	try (FileOutputStream fos = new FileOutputStream(TeamDir, false);
 			ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-		oos.writeObject(team);
+		oos.writeObject(newTeam);
+		oos.close();
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
-	return;
+	System.out.println("Team " + TeamDir + "wurde erstellt");  	 
+
 }
-public static void deleteTeam(File directory2) throws IOException
+
+
+public boolean deleteTeam(long TeamID) throws IOException
 {	
 	System.out.println("Bitte geben den Namen des zu löschenden Teams ein");
-	try{
-		Scanner keyboard = new Scanner(System.in);
-		String directoryDelete = keyboard.nextLine();
-		File directory = new File(directoryDelete);
-		//make sure directory exists
-    	if(!directory.exists()){
- 
-           System.out.println("Directory does not exist.");
-           System.exit(0);
- 
-        }else{
- 
-           deleteTeam(directory);
-        }
- 
-    	System.out.println("Done");
-     
-
-	   
-	}catch(Exception e){
-		
-		e.printStackTrace();
+	//try{
+	File TeamDir = new File("C:\\Users\\Administrator\\Desktop\\TaskManager\\Team" + this.id);
+	
+	TeamDir.delete();// Now the file will get deleted
+	if(!TeamDir.exists())return true;
+	else return false;
 		
 	}
 }
-}
+//}
